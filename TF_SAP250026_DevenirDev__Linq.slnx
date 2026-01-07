@@ -5,4 +5,7 @@
   <Folder Name="/02 Lambda/">
     <Project Path="DemoLambda/DemoLambda.csproj" />
   </Folder>
+  <Folder Name="/03 Méthodes extension/">
+    <Project Path="DemoMethodesExtension/DemoMethodesExtension.csproj" />
+  </Folder>
 </Solution>
