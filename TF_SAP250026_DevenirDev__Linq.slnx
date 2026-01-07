@@ -11,4 +11,7 @@
   <Folder Name="/04 Immediat vs Différé/">
     <Project Path="DemoYield/DemoYield.csproj" />
   </Folder>
+  <Folder Name="/05 Linq/">
+    <Project Path="DemoLinq/DemoLinq.csproj" />
+  </Folder>
 </Solution>
