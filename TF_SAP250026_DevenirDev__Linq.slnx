@@ -14,4 +14,8 @@
   <Folder Name="/05 Linq/">
     <Project Path="DemoLinq/DemoLinq.csproj" />
   </Folder>
+  <Folder Name="/Exercices/">
+    <Project Path="Exo_Linq_App/Exo_Linq_App.csproj" />
+    <Project Path="Exo_Linq_Context/Exo_Linq_Context.csproj" />
+  </Folder>
 </Solution>
