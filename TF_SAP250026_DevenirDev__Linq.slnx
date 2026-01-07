@@ -8,4 +8,7 @@
   <Folder Name="/03 Méthodes extension/">
     <Project Path="DemoMethodesExtension/DemoMethodesExtension.csproj" />
   </Folder>
+  <Folder Name="/04 Immediat vs Différé/">
+    <Project Path="DemoYield/DemoYield.csproj" />
+  </Folder>
 </Solution>
