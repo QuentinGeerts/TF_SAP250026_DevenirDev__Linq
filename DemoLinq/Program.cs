@@ -3,6 +3,7 @@
  */
 
 using DemoLinq.Models;
+using System.Runtime.Intrinsics.Arm;
 
 List<Contact> Contacts = new List<Contact>();
 Contacts.AddRange(new Contact[] {
@@ -189,3 +190,188 @@ foreach (var c in contactsAvecDeuxTris)
 {
     Console.WriteLine($"2 tri: {c.AnneeDeNaissance} {c.Nom} {c.Prenom}");
 }
+
+
+// 10.  Opérateurs Count | LongCount
+// Permet de compter le nombre d'éléments dans une séquence (sur base d'une condition)
+
+// Opérateurs
+long countContacts = Contacts.LongCount();
+int countContactsNeApres1970 = Contacts.Where(c => c.AnneeDeNaissance >= 1970).Count();
+int countContactsNeApres1980 = Contacts.Count(c => c.AnneeDeNaissance >= 1980);
+
+// Expression de requête
+int countContactsNeApres1960 = (from c in Contacts 
+                                where c.AnneeDeNaissance >= 1960 
+                                select c).Count();
+
+Console.WriteLine($"Nombre de contacts nés après 1970: {countContactsNeApres1970}");
+
+
+// 11.  Opérateurs Min | Max
+// Permet de récupérer la valeur (min / max) dans une séquence basé sur une clef
+
+// Opérateurs
+int anneeNaissancePlusAgee = Contacts.Min(c => c.AnneeDeNaissance);
+int anneeNaissancePlusJeune = Contacts.Max(c => c.AnneeDeNaissance);
+
+// Expression de requête
+int anneeNaissancePlusAgee2 = (from c in Contacts select c.AnneeDeNaissance).Min();
+
+Console.WriteLine($"Année de naissance de la personne la plus âgée: {anneeNaissancePlusAgee}");
+Console.WriteLine($"Année de naissance de la personne la plus jeune: {anneeNaissancePlusJeune}");
+
+
+// 12.  Opérateurs Sum | Average
+// Permet de calculer la somme et la moyenne sur base d'une clef
+
+int[] ints = [1, 2, 3, 4, 5];
+
+// Opérateurs
+int sommeInts = ints.Sum();
+int sommeAnnee = Contacts.Sum(c => c.AnneeDeNaissance);
+
+// Expression de requête
+(from i in ints select i).Sum();
+(from c in Contacts select c.AnneeDeNaissance).Sum();
+(from c in Contacts select c).Sum(c => c.AnneeDeNaissance);
+
+double moyenneInts = ints.Average();
+double moyenneInts2 = (from i in ints select i).Average();
+
+
+// 13.  Opérateur GroupBy
+// Permet de grouper les éléments d'une séquence en fonction d'une clef
+
+// Opérateur
+IEnumerable<IGrouping<string, Contact>> contactsByDomaine = Contacts.GroupBy(c => c.Email.Split('@')[1]); // Opérateurs
+
+// Pour changer les clefs retournées par l'objet, vous devez utiliser le Select
+var contactsByDomaineModifie = Contacts
+    .Select(c => new { NomComplet = c.Nom + " " + c.Prenom, Courriel = c.Email })
+    .GroupBy(c => c.Courriel.Split('@')[1]);
+
+// Expression de requête
+var contactsByDomaine2 = from c in Contacts
+                        group c by c.Email.Split('@')[1];
+
+var contactsByDomaine2Modifie = from c in Contacts
+                                select new { NomComplet = c.Nom + " " + c.Prenom, Courriel = c.Email } into contact
+                                group contact by contact.Courriel.Split('@')[1];
+
+foreach (IGrouping<string, Contact> group in contactsByDomaine)
+{
+    Console.WriteLine($"Domaine: {group.Key}");
+
+    foreach (Contact c in group)
+    {
+        Console.WriteLine($" - {c.Nom} {c.Prenom} {c.Email} {c.AnneeDeNaissance}");
+    }
+}
+
+foreach (var g in contactsByDomaineModifie)
+{
+    Console.WriteLine($"Domaine: {g.Key}");
+
+    foreach (var c in g)
+    {
+        Console.WriteLine($" - {c.NomComplet} {c.Courriel}");
+    }
+}
+
+foreach (var g in contactsByDomaine2Modifie)
+{
+    Console.WriteLine($"Domaine: {g.Key}");
+
+    foreach (var c in g)
+    {
+        Console.WriteLine($" - {c.NomComplet} {c.Courriel}");
+    }
+}
+
+
+// 14.  Opérateur Join
+// Permet de joindre deux séquences sur base d'une clef commune
+
+List<Rdv> RendezVous = new List<Rdv>();
+RendezVous.AddRange(new Rdv[] {
+    new Rdv(){ Email = "stephane.faulkner@cognitic.be", Date = new DateTime(2012,5,12)},
+    new Rdv(){ Email = "peppard.george@ateam.com", Date = new DateTime(2011,8,14)},
+    new Rdv(){ Email = "bruce.willis@diehard.com", Date = new DateTime(2012,6,19)},
+    new Rdv(){ Email = "bruce.willis@diehard.com", Date = new DateTime(2012,6,20)},
+    new Rdv(){ Email = "michael.person@cognitic.be", Date = new DateTime(2012,4,19)},
+});
+
+// Opérateur
+var tousLesRendezVous = Contacts
+    .Join(RendezVous, c => c.Email, r => r.Email, (c, r) => new { c.Email, c.Nom, c.Prenom, r.Date });
+
+// Paramètres:
+// [1] Séquence à joindre
+// [2] Clef de la première séquence pour faire la liaison
+// [3] Clef de la deuxième séquence pour faire la liaison
+// [4] Le résultat qui sera retourné
+
+foreach (var c in tousLesRendezVous)
+{
+    Console.WriteLine($"{c.Email} {c.Nom} {c.Prenom} {c.Date}");
+}
+
+// Expression de requête
+var rdvs = from c in Contacts
+           join r in RendezVous on c.Email equals r.Email
+           select new { c.Email, c.Nom, c.Prenom, r.Date };
+
+foreach (var r in rdvs)
+{
+    Console.WriteLine($"{r.Email} {r.Nom} {r.Prenom} {r.Date.ToShortDateString()}");
+}
+
+
+// 15.  Opérateur GroupJoin
+// Permet de joindre deux séquences en créant un groupe pour chaque élément de la séquence externe
+
+// Opérateur
+var rdvsByContact = Contacts
+    .GroupJoin(RendezVous, c => c.Email, r => r.Email, (c, r) => new { c.Email, c.Nom, c.Prenom, Rdv = r })
+    .Where(c => c.Rdv.Count() > 0);
+
+
+foreach (var c in rdvsByContact)
+{
+    Console.WriteLine($"Contact: {c.Email} {c.Nom} {c.Prenom}");
+
+    foreach (Rdv r in c.Rdv)
+    {
+        Console.WriteLine($" - {r.Date}");
+    }
+}
+
+// Expression de requête
+var rdvsByContact2 = from c in Contacts
+                     join r in RendezVous on c.Email equals r.Email into Rdv
+                     select new { c.Email, c.Nom, c.Prenom, Rdv };
+
+foreach (var c in rdvsByContact2)
+{
+    Console.WriteLine($"Contact: {c.Email} {c.Nom} {c.Prenom}");
+
+    foreach (Rdv r in c.Rdv)
+    {
+        Console.WriteLine($" - {r.Date}");
+    }
+}
+
+// 16.  Multiple clause from
+// Permet de croiser deux séquences ensemble (équivalent CROSS JOIN)
+// <!> uniquement possible avec les expressions de requête
+
+var cross = from c in Contacts
+            from r in RendezVous
+            select new { c.Nom, c.Prenom, r.Date };
+
+foreach (var c in cross)
+{
+    Console.WriteLine($"{c.Nom} {c.Prenom} {c.Date}");
+}
+
