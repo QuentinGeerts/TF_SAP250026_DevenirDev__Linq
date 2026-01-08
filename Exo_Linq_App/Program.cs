@@ -244,4 +244,52 @@ foreach (var s in resultat2_7)
     Console.WriteLine($"{s.LastName} {s.SectionId} {s.Resultat100}");
 }
 
+Console.Clear();
 
+// 3 Opérateurs « Count », « Min », « Max », « Sum » et « Average »
+
+Console.WriteLine($"\nPartie 2 - Opérateurs Count, Min, Max, Sum et Average\n");
+
+// Exercice 3.1 Donner le résultat annuel moyen pour l’ensemble des étudiants.
+
+Console.WriteLine($"\nExercice 3.1\n");
+
+var moyenne = context.Students.Average(s => s.Year_Result);
+
+Console.WriteLine($"Moyenne de l'ensemble des étudiants: {moyenne}");
+
+
+// Exercice 3.2 Donner le plus haut résultat annuel obtenu par un étudiant.
+
+Console.WriteLine($"\nExercice 3.2\n");
+
+var meilleureNote = context.Students.Max(s => s.Year_Result);
+Console.WriteLine($"Résultat le plus élevé: {meilleureNote}");
+
+
+// Exercice 3.3 Donner la somme des résultats annuels.
+
+Console.WriteLine($"\nExercice 3.3\n");
+
+var sommeNotes = context.Students.Sum(s => s.Year_Result);
+Console.WriteLine($"Somme des notes annuelles des étudiants: {sommeNotes}");
+
+
+// Exercice 3.4 Donner le résultat annuel le plus faible.
+
+Console.WriteLine($"\nExercice 3.4\n");
+
+var pireNote = context.Students.Min(s => s.Year_Result);
+Console.WriteLine($"Réultat le plus bas: {pireNote}");
+
+
+// Exercice 3.5 Donner le nombre de lignes qui composent la séquence « Students » ayant obtenu
+// un résultat annuel impair.
+
+Console.WriteLine($"\nExercice 3.5\n");
+
+var nbResultatsImpairs = context.Students
+    .Where(s => s.Year_Result % 2 != 0)
+    .Count();
+
+Console.WriteLine($"Nombre de notes impaires pour l'ensemble des étudiants: {nbResultatsImpairs}");
