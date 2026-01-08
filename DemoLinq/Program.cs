@@ -21,7 +21,7 @@ Contacts.AddRange(new Contact[] {
     new Contact(){ Nom = "Willis", Prenom = "Bruce", Email = "bruce.willis@diehard.com", AnneeDeNaissance = 1955 },
 });
 
-List<Animal> Animaux = [
+List<object> Animaux = [
     new Chien(),
     new Chien(),
     new Chat(),
@@ -29,6 +29,7 @@ List<Animal> Animaux = [
     new Chat(),
     new Chat(),
     new Chat(),
+    12
 ];
 
 
@@ -36,8 +37,8 @@ List<Animal> Animaux = [
 // Permet de convertir une collection en une séquence de T.
 // <!> Si un élément n'est pas convertissable, lève une exception
 
-//object[] contactsArrayList = [.. Contacts.ToArray(), 12]; // <!> 12 n'est pas convertissable
-object[] contactsArrayList = [.. Contacts.ToArray()];
+//object[] contactsArrayList = [.. Contacts, 12]; // <!> 12 n'est pas convertissable
+object[] contactsArrayList = [.. Contacts];
 
 IEnumerable<Contact> c1 = contactsArrayList.Cast<Contact>().ToList(); // Opérateur
 IEnumerable<Contact> c2 = (from Contact c in contactsArrayList select c).ToList(); // Expression de requête
@@ -48,6 +49,7 @@ IEnumerable<Contact> c2 = (from Contact c in contactsArrayList select c).ToList(
 // 2.  Opérateur OfType<T>()
 // Permet de filtrer une collection afin de n'avoir plus qu'une séquence de type T
 
+var animaux = Animaux.OfType<Animal>().ToList();
 var chiens = Animaux.OfType<Chien>().ToList();
 var chats = Animaux.OfType<Chat>();
 var furets = Animaux.OfType<Furet>().ToList();
@@ -72,9 +74,9 @@ var contactNeAvant1970 = from Contact c in Contacts
 
 
 // Exemple du code de Where (by Quentin)
-//static IEnumerable<Contact> Where(this IEnumerable<Contact> items, Func<Contact, bool> predicate)
+//static IEnumerable<Contact> Where(this IEnumerable<Contact> source, Func<Contact, bool> predicate)
 //{
-//    foreach (var item in items)
+//    foreach (var item in source)
 //    {
 //        if (predicate(item)) yield return item;
 //    }
@@ -124,7 +126,7 @@ foreach (var c in contactsSansDoublon2)
 
 
 // 6.  Opérateur SingleOrDefault
-// Permet de retourner un élément uniquement d'une séquence ou une valeur par défaut si aucun élément ne correspond à la condition
+// Permet de retourner un élément unique d'une séquence ou une valeur par défaut si aucun élément ne correspond à la condition
 // <!> SingleOrDefault() peut déclencher une exception quand plus d'une valeur !!
 
 Contact? thierryMorre = Contacts
@@ -174,7 +176,11 @@ foreach (var c in contactsTriesParAnneeInv)
 // 9.  Opérateurs ThenBy | ThenByDescending
 // Permet d'ajouter un tri secondaire sur les éléments d'une séquence
 
-var contactsAvecDeuxTris = Contacts.OrderBy(c => c.AnneeDeNaissance).ThenBy(c => c.Nom);
+var contactsAvecDeuxTris = Contacts
+    .OrderBy(c => c.AnneeDeNaissance)
+    .ThenByDescending(c => c.Nom)
+    .ThenBy(c => c.Prenom);
+
 var contactsAvecDeuxTris2 = from Contact c in Contacts 
                             orderby c.AnneeDeNaissance, c.Nom descending 
                             select c; // Expression de requête

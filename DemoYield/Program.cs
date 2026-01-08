@@ -72,7 +72,7 @@ foreach (var item in entiers2)
 
 var entiers3 = GetNumbersYield().ToList(); // Immédiat
 
-foreach (var item in entiers2)
+foreach (var item in entiers3)
 {
     Console.WriteLine($"item: {item}");
 }

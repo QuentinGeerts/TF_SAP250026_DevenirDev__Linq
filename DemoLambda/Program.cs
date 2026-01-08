@@ -40,7 +40,7 @@ double Addition (double a, double b)
 
 // 2.1.  Action
 Action act1 = () => Console.WriteLine();
-Action<string> act2 = (string message) => Console.WriteLine(message);
+Action<string> act2 = message => Console.WriteLine(message);
 Action<string, string> act3 = (exp, dest) => Console.WriteLine($"{exp} dit bonjour à {dest}");
 
 act1.Invoke();

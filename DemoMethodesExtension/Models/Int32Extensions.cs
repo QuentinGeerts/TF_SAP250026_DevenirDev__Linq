@@ -35,6 +35,16 @@ public static class Int32Extensions
     }
 
     /// <summary>
+    /// Determines whether the specified integer is an odd number.
+    /// </summary>
+    /// <param name="number">The integer value to evaluate.</param>
+    /// <returns>true if the specified number is odd; otherwise, false.</returns>
+    public static bool IsOdd (this int number)
+    {
+        return number % 2 != 0;
+    }
+
+    /// <summary>
     /// Calculates the factorial of the specified non-negative integer.
     /// </summary>
     /// <param name="number">The non-negative integer for which to compute the factorial.</param>

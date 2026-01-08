@@ -17,7 +17,7 @@ List<Personnage> personnagesShrek =
 foreach (Personnage p in personnagesShrek)
 {
     // Création d'un type anonyme
-    var personnage = new { Nom = p.Nom, Race = p.Type };
+    var personnage = new { p.Nom, Race = p.Type };
 
     Console.WriteLine($"Personnage: {personnage.Nom} {personnage.Race}");
 }
