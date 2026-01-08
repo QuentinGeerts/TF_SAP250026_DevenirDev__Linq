@@ -78,3 +78,36 @@ foreach (var s in resultat1_3a)
 {
     Console.WriteLine($"{s}");
 }
+
+
+Console.WriteLine($"\n2 Opérateurs « Where » et « OrderBy »\n");
+
+// Exercice 2.1 Pour chaque étudiant né avant 1955, donner le nom, le résultat annuel et le statut.
+// Le statut prend la valeur « OK » si l’étudiant à obtenu au moins 12 comme résultat annuel
+// et « KO » dans le cas contraire. 
+
+Console.WriteLine($"\nExercice 2.1.\n");
+
+var resultat2_1a = context.Students
+    .Where(s => s.BirthDate.Year < 1955)
+    .Select(s => new {
+        LastName = s.Last_Name,
+        YearResult = s.Year_Result,
+        Statut = s.Year_Result >= 12 ? "OK" : "KO"
+    }); // Opérateur
+
+var resultat2_1b = from s in context.Students
+                   where s.BirthDate.Year < 1955
+                   select new
+                   {
+                       LastName = s.Last_Name,
+                       YearResult = s.Year_Result,
+                       Statut = s.Year_Result >= 12 ? "OK" : "KO"
+                   }; // Expression de requête
+
+foreach (var s in resultat2_1a)
+{
+    Console.WriteLine($"{s.LastName} {s.YearResult} {s.Statut}");
+}
+
+
